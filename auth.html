@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Signup and Login</title>
+</head>
+<body>
+    <!-- Signup form -->
+    <h1>User Signup</h1>
+    <form id="signup-form">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <button type="submit">Sign Up</button>
+    </form>
+
+    <!-- Login form -->
+    <h1>User Login</h1>
+    <form id="login-form">
+        <label for="loginEmail">Email:</label>
+        <input type="email" id="loginEmail" name="email" required>
+        <br>
+        <label for="loginPassword">Password:</label>
+        <input type="password" id="loginPassword" name="password" required>
+        <br>
+        <button type="submit">Login</button>
+    </form>
+
+    <!-- Display messages here -->
+    <div id="message"></div>
+
+    <script>
+        // Handle signup form submission
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Send a POST request to the signup endpoint
+            const response = await fetch('http://localhost:5000/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            // Parse the server response and display a message
+            const data = await response.json();
+            document.getElementById('message').innerText = `Signup successful. User ID: ${data.id}`;
+        });
+
+        // Handle login form submission
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Send a POST request to the login endpoint
+            const response = await fetch('http://localhost:5000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            // Check the status code and display appropriate messages
+            if (response.status === 200) {
+                document.getElementById('message').innerText = 'Login successful.';
+            } else {
+                document.getElementById('message').innerText = 'Invalid credentials. Please try again.';
+            }
+        });
+    </script>
+</body>
+</html>
